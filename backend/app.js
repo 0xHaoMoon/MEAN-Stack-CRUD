@@ -78,6 +78,8 @@ app.post("/api/posts", (req, res, next) => {
   });
 });
 
+
+
 //Dies definiert eine GET-Anfrage-Route für Anfragen an "/api/posts".
 // Das bedeutet, dass diese Funktion aufgerufen wird, wenn eine GET-Anfrage an diese URL gesendet wird.
 app.get("/api/posts", (req, res, next) => {
@@ -95,6 +97,25 @@ app.get("/api/posts", (req, res, next) => {
       posts: documents,
     });
   });
+});
+
+
+//Dies definiert eine DELETE-Anfrage-Route für Anfragen an "/api/posts/:id". 
+//Das :id in der Route ist ein Parameter, der verwendet wird, um eine bestimmte Ressource 
+//(in diesem Fall einen Beitrag) anhand ihrer eindeutigen ID zu identifizieren. 
+//Diese Funktion wird aufgerufen, wenn eine DELETE-Anfrage an diese URL mit einer spezifischen ID 
+//gesendet wird.
+app.delete("/api/posts/:id", (req, res, next) => {
+    //Hier wird die Methode .deleteOne() auf das "Post"-Modell angewendet. 
+    //Sie löscht den Beitrag mit der angegebenen ID, die aus dem req.params.id-Parameter extrahiert wird.
+    // Das Ergebnis dieser Löschoperation wird in der .then()-Funktion verarbeitet.
+    Post.deleteOne({_id: req.params.id})
+    .then(result=>{
+      console.log(result);
+      res.status(200).json({
+        message: "Post deleted",
+      });
+    })
 });
 
 //Exportiert die gesamte Express-Anwendung, damit sie in anderen Teilen der Anwendung verwendet werden kann.

@@ -13,11 +13,11 @@ export class PostsService {
    private posts: Post[] = [];
    private postsUpdated = new Subject<Post[]>();
 
-   constructor(private hhtp: HttpClient) { }
+   constructor(private http: HttpClient) { }
 
 
    getPosts(){
-    this.hhtp.get<{message:string, posts: any}>('http://localhost:3000/api/posts')
+    this.http.get<{message:string, posts: any}>('http://localhost:3000/api/posts')
     .pipe(map((postData)=>{
       return postData.posts.map(post => {
         return{
@@ -33,9 +33,11 @@ export class PostsService {
     });
    }
 
+
    getPostsUpdateListener(){
     return this.postsUpdated.asObservable();
    }
+
 
    addPost(title: string, content:string){
     const post: Post = {
@@ -43,13 +45,22 @@ export class PostsService {
       title: title,
       content: content
     };
-    this.hhtp.post<{message:string}>('http://localhost:3000/api/posts', post)
+    this.http.post<{message:string}>('http://localhost:3000/api/posts', post)
     .subscribe((responsetData)=>{
       console.log(responsetData.message);
       
     });
     this.posts.push(post);
     this.postsUpdated.next(this.posts);
+   }
+
+   deletePost(postId: string){
+    this.http.delete("http://localhost:3000/api/posts/" + postId)
+    .subscribe(()=>{
+      const updatedPosts = this.posts.filter(post => post.id !==postId);
+      this.posts = updatedPosts;
+      this.postsUpdated.next(this.posts);
+    })
    }
 
 
