@@ -64,18 +64,27 @@ app.post("/api/posts", (req, res, next) => {
     content: req.body.content,
   });
 
-  //Mit dieser Zeile wird der neu erstellte Beitrag mit den angegebenen Daten
-  //in der Datenbank gespeichert. Das speichern eines neuen Beitrags ist eine asynchrone Operation
-  post.save();
+  //Dieser Codeabschnitt zeigt die Verwendung der .save()-Methode, um ein neues Dokument 
+  //(in diesem Fall einen Beitrag) in der Datenbank zu speichern. Nachdem die Speicheroperation 
+  //abgeschlossen ist, wird die .then()-Funktion aufgerufen, um das Ergebnis (das gespeicherte Dokument) 
+  //zu verarbeiten.
+  post.save()
+  //Nachdem der Beitrag erfolgreich in der Datenbank gespeichert wurde, wird eine HTTP-Antwort an
+  // den Client gesendet. Der Statuscode 201 steht für "Created" und signalisiert, dass der Beitrag 
+  //erfolgreich erstellt wurde. Die Antwort ist ein JSON-Objekt, das eine Erfolgsmeldung enthält
+  // (der Beitrag wurde erfolgreich hinzugefügt) und die ID des erstellten Beitrags (createdPost._id).
+  // Dies ermöglicht dem Client, die ID des neu erstellten Beitrags zu erhalten, was oft für die spätere
+  // Bearbeitung oder Anzeige des Beitrags erforderlich ist.
+  .then(createdPost =>{
+  res.status(201).json({
+    message: "Post added succesfully",
+    postId: createdPost._id
+  });
+  });
 
   console.log(post);
 
-  //Nachdem der Beitrag erfolgreich erstellt und gespeichert wurde, wird eine HTTP-Antwort
-  // an den Client gesendet. Der Statuscode 201 steht für "Created", um anzuzeigen, dass der Beitrag erfolgreich erstellt wurde.
-  //Die Antwort an den Client ist ein JSON-Objekt mit einer Erfolgsmeldung. Der Client kann diese Daten dann verwenden.
-  res.status(201).json({
-    message: "Post added succesfully",
-  });
+
 });
 
 
